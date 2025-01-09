@@ -57,8 +57,8 @@ public class UserControllerTests {
     void validateCreateUserWithLoginInsteadOfName() {
         user = User.builder()
                 .email("iliakuvshinov322@yandex.ru")
-                .login("")
-                .name("Wabama")
+                .login("ilia")
+                .name("")
                 .birthday(LocalDate.of(1993, 4, 12))
                 .build();
         UserController userController = new UserController();
