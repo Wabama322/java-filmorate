@@ -7,12 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.Objects.isNull;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -33,7 +28,7 @@ public class FilmController {
     public Film updateFilm(@RequestBody Film film) {
         validate(film);
         Film filmToUpdate = films.get(film.getId());
-        if (isNull(filmToUpdate)) {
+        if (Objects.isNull(filmToUpdate)) {
             throw new NotFoundException("Фильм с id " + film.getId() + " не найден");
         }
         update(film, filmToUpdate);
@@ -42,8 +37,7 @@ public class FilmController {
 
     @GetMapping(path)
     public List<Film> getAllFilms() {
-        Collection<Film> listOfFilms = films.values();
-        return listOfFilms.stream().toList();
+        return new ArrayList<>(films.values());
     }
 
     private void update(Film film, Film filmToUpdate) {

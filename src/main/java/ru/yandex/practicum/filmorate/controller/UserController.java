@@ -66,6 +66,10 @@ public class UserController {
             log.error("Дата рождения позже сегодняшней даты {}", user.getBirthday());
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
+        if (user.getBirthday() == null) {
+            log.error("Дата рождения не указана {}", user.getBirthday());
+            throw new ValidationException("Поле birthday должно быть заполнено");
+        }
         if (isNull(user.getName()) || user.getName().isEmpty()) {
             log.warn("Вместо пустого имени присваивается логин");
             user.setName(user.getLogin());
