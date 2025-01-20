@@ -2,14 +2,20 @@ package ru.yandex.practicum.filmorate.controllerTests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
+@SpringBootTest
 public class FilmControllerTests {
     Film film;
+
+    @Autowired
+    private FilmController filmController;
 
     @Test
     void validateNotAddFilmWithEmptyName() {
@@ -20,7 +26,6 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(2008, 8, 14))
                 .duration(152)
                 .build();
-        FilmController filmController = new FilmController();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         }, "Пустое название фильма");
@@ -37,7 +42,6 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(2008, 8, 14))
                 .duration(152)
                 .build();
-        FilmController filmController = new FilmController();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         }, "Описание превышает 200 символов");
@@ -52,7 +56,6 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(1894, 12, 28))
                 .duration(152)
                 .build();
-        FilmController filmController = new FilmController();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         }, "Фильм создан ранее,чем 1895.12.28");
@@ -67,7 +70,6 @@ public class FilmControllerTests {
                 .releaseDate(LocalDate.of(2008, 8, 14))
                 .duration(0)
                 .build();
-        FilmController filmController = new FilmController();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
         }, "Продолжительность фильма не может быть равна нулю");
