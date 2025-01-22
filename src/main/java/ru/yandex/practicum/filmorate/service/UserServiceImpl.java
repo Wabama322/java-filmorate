@@ -48,11 +48,10 @@ public class UserServiceImpl implements UserService {
         Set<Integer> friends = user.getFriends();
         Set<Integer> secondUserFriends = userFriend.getFriends();
         List<User> mutualFriends = new ArrayList<>();
-        for (Integer idFriends : friends) {
-            if (secondUserFriends.contains(idFriends)) {
-                mutualFriends.add(userStorage.getUserById(idFriends));
-            }
-        }
+        friends.stream()
+                .filter(secondUserFriends::contains)
+                .map(userStorage::getUserById)
+                .forEach(mutualFriends::add);
         return mutualFriends;
     }
 
