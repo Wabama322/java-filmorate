@@ -1,30 +1,37 @@
 package ru.yandex.practicum.filmorate.controllerTests;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.utill.Reader;
 
 import java.time.LocalDate;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 public class FilmControllerTests {
     Film film;
 
     @Autowired
     private FilmController filmController;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void validateNotAddFilmWithEmptyName() {
         film = Film.builder()
                 .name("")
-                .description("Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и " +
-                        "прокурора Харви Дента он намерен очистить улицы Готэма от преступности.")
-                .releaseDate(LocalDate.of(2008, 8, 14))
-                .duration(152)
+                .description("Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в " +
+                        "перерывах между разборками")
+                .releaseDate(LocalDate.of(1994, 5, 21))
+                .duration(154)
                 .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
@@ -34,13 +41,16 @@ public class FilmControllerTests {
     @Test
     void validateNotAddFilmWithLongDescription() {
         film = Film.builder()
-                .name("Темный рыцарь")
-                .description("Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и " +
-                        "прокурора Харви Дента он намерен очистить улицы Готэма от преступности. Сотрудничество " +
-                        "оказывается эффективным, но скоро они обнаружат себя посреди хаоса, развязанного восходящим " +
-                        "криминальным гением, известным напуганным горожанам под именем Джокер..")
-                .releaseDate(LocalDate.of(2008, 8, 14))
-                .duration(152)
+                .name("Криминальное чтиво")
+                .description("Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в " +
+                        "перерывах между разборками  и решением проблем с должниками криминального босса Марселласа " +
+                        "Уоллеса.\n" +
+                        "\n" +
+                        "В первой истории Винсент проводит незабываемый вечер с женой Марселласа Мией. Во второй " +
+                        "Марселлас покупает боксёра Бутча Кулиджа, чтобы тот сдал бой. В третьей истории" +
+                        " Винсент и Джулс по нелепой случайности попадают в неприятности.")
+                .releaseDate(LocalDate.of(1994, 5, 21))
+                .duration(154)
                 .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
@@ -50,11 +60,11 @@ public class FilmControllerTests {
     @Test
     void validateNotAddFilmWithReleaseDateLaterThanNow() {
         film = Film.builder()
-                .name("Темный рыцарь")
-                .description("Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и " +
-                        "прокурора Харви Дента он намерен очистить улицы Готэма от преступности.")
-                .releaseDate(LocalDate.of(1894, 12, 28))
-                .duration(152)
+                .name("Криминальное чтиво")
+                .description("Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в " +
+                        "перерывах между разборками")
+                .releaseDate(LocalDate.of(1800, 9, 21))
+                .duration(154)
                 .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
@@ -64,14 +74,20 @@ public class FilmControllerTests {
     @Test
     void validateNotAddFilmIfDurationEqualsZero() {
         film = Film.builder()
-                .name("Темный рыцарь")
-                .description("Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и " +
-                        "прокурора Харви Дента он намерен очистить улицы Готэма от преступности.")
-                .releaseDate(LocalDate.of(2008, 8, 14))
+                .name("Криминальное чтиво")
+                .description("Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в " +
+                        "перерывах между разборками")
+                .releaseDate(LocalDate.of(1994, 5, 21))
                 .duration(0)
                 .build();
         Assertions.assertThrows(ValidationException.class, () -> {
             filmController.addFilm(film);
-        }, "Продолжительность фильма не может быть равна нулю");
+        }, "Продолжительность равно нулю");
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        jdbcTemplate.update(Reader.readString("src/test/resources/drop.sql"));
+        jdbcTemplate.update(Reader.readString("src/main/resources/schema.sql"));
     }
 }
