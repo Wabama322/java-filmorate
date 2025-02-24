@@ -1,6 +1,4 @@
-SELECT FILM.film_id, GENRES.*
-FROM FILM
-         LEFT JOIN FILM_GENRES ON FILM.film_id = FILM_GENRES.film_id
-         LEFT JOIN GENRES ON  FILM_GENRES.genre_id = GENRES.genre_id
-WHERE FILM_GENRES.genre_id IS NOT NULL
-ORDER BY FILM.film_id
+SELECT fg.film_id, g.*
+FROM FILM_GENRES fg
+JOIN GENRES g ON fg.genre_id = g.genre_id
+WHERE fg.film_id IN (:filmIds);

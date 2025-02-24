@@ -26,6 +26,8 @@ public class FilmDbStorage implements FilmStorage {
     private static final String SELECT_BY_ID_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectById.sql");
     private static final String INSERT_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "insert.sql");
     private static final String UPDATE_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "update.sql");
+    private static final String SELECT_POPULAR_FILMS_SQL_QUERY = Reader.readString(SQL_QUERY_DIR
+            + "selectPopularFilms.sql");
 
     @Override
     public Film addFilm(Film object) {
@@ -68,5 +70,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void deleteFilm(Film film) {
+    }
+
+    @Override
+    public List<Film> getPopularFilms(Integer count) {
+        return jdbcTemplate.query(SELECT_POPULAR_FILMS_SQL_QUERY, new FilmMapper(), count);
     }
 }

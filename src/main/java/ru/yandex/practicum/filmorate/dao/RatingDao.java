@@ -8,6 +8,4 @@ public interface RatingDao {
     List<Rating> getRatingList();
 
     Rating getRating(Integer ratingId);
-
-    boolean contains(Integer ratingId);
 }

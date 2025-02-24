@@ -17,6 +17,4 @@ public interface GenreDao {
     Genre getGenre(Integer genreId);
 
     void clearFilmGenres(Integer filmId);
-
-    boolean contains(Integer genreId);
 }

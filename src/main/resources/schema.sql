@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS USERS
     user_name VARCHAR(255) NOT NULL,
     birthday  DATE
 );
+
 CREATE TABLE IF NOT EXISTS FILM_GENRES
 (
     film_id  INT,
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS FILM_GENRES
     FOREIGN KEY (genre_id) REFERENCES GENRES (genre_id),
     PRIMARY KEY (film_id, genre_id)
 );
+
 CREATE TABLE IF NOT EXISTS FILM_LIKES
 (
     film_id INT,
@@ -44,6 +46,7 @@ CREATE TABLE IF NOT EXISTS FILM_LIKES
     FOREIGN KEY (user_id) REFERENCES USERS (user_id),
     PRIMARY KEY (film_id, user_id)
 );
+
 CREATE TABLE IF NOT EXISTS USER_FRIENDS
 (
     user_id   INT,

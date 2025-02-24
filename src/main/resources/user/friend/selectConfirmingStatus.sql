@@ -1,9 +1,5 @@
-SELECT (
-           SELECT user_id
-           FROM USER_FRIENDS
-           WHERE user_id = ? AND friend_id = ?
-       ) AND (
-           SELECT friend_id
-           FROM USER_FRIENDS
-           WHERE user_id = ? AND friend_id = ?
-       ) AS status
+SELECT COUNT(*) AS status
+FROM USER_FRIENDS
+WHERE (user_id = ? AND friend_id = ?)
+   OR (user_id = ? AND friend_id = ?)
+HAVING COUNT(*) = 2;

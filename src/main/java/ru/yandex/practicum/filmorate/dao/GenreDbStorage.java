@@ -21,9 +21,12 @@ public class GenreDbStorage implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
     private static final String SQL_QUERY_DIR = "src/main/resources/genre/";
     private static final String SELECT_ALL_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectAll.sql");
-    private static final String SELECT_FILM_GENRES_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectFilmGenres.sql");
-    private static final String SELECT_GENRES_ALL_FILMS_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectGenresAllFilm.sql");
-    private static final String DELETE_FILM_GENRES_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "deleteFilmGenres.sql");
+    private static final String SELECT_FILM_GENRES_SQL_QUERY = Reader.readString(SQL_QUERY_DIR
+            + "selectFilmGenres.sql");
+    private static final String SELECT_GENRES_ALL_FILMS_SQL_QUERY = Reader.readString(SQL_QUERY_DIR
+            + "selectGenresAllFilm.sql");
+    private static final String DELETE_FILM_GENRES_SQL_QUERY = Reader.readString(SQL_QUERY_DIR
+            + "deleteFilmGenres.sql");
     private static final String SELECT_BY_ID_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectById.sql");
     private static final String INSERT_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "insert.sql");
 
@@ -63,10 +66,5 @@ public class GenreDbStorage implements GenreDao {
     @Override
     public void clearFilmGenres(Integer filmId) {
         jdbcTemplate.update(DELETE_FILM_GENRES_SQL_QUERY, filmId);
-    }
-
-    @Override
-    public boolean contains(Integer genreId) {
-        return getGenre(genreId) != null;
     }
 }

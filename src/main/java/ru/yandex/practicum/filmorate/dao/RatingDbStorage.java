@@ -30,9 +30,4 @@ public class RatingDbStorage implements RatingDao {
         return jdbcTemplate.query(SELECT_BY_ID_SQL_QUERY, new RatingMapper(), ratingId)
                 .stream().findAny().orElse(null);
     }
-
-    @Override
-    public boolean contains(Integer ratingId) {
-        return getRating(ratingId) != null;
-    }
 }

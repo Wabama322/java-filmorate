@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -68,5 +69,13 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private int generateId() {
         return count++;
+    }
+
+    @Override
+    public List<Film> getPopularFilms(Integer count) {
+        return films.values().stream()
+                .sorted((f1, f2) -> Integer.compare(f2.getLikes(), f1.getLikes()))
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }
