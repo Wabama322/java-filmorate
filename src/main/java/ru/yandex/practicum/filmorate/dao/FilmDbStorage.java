@@ -21,6 +21,7 @@ import java.util.List;
 @Component(value = "H2FilmDb")
 @Repository
 @RequiredArgsConstructor
+
 public class FilmDbStorage implements FilmStorage {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
