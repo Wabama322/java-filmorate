@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 
@@ -52,5 +53,10 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void clearFilmGenres(Integer filmId) {
         genreDbStorage.clearFilmGenres(filmId);
+    }
+
+    @Override
+    public Map<Integer, List<Genre>> getAllFilmsGenres(List<Integer> filmIds) {
+        return genreDbStorage.getAllFilmsGenres(filmIds);
     }
 }

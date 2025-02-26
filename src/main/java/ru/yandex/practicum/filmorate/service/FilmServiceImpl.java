@@ -14,9 +14,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -56,11 +54,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getPopularFilms(Integer count) {
-        return filmStorage.getAllFilms().stream()
-                .filter(f -> nonNull(f.getLikes()))
-                .sorted((f1, f2) -> f2.getLikes() - f1.getLikes())
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getPopularFilms(count);
     }
 
     @Override
@@ -105,9 +99,12 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getAllFilms() {
         List<Film> allFilms = filmStorage.getAllFilms();
+        List<Integer> filmIds = allFilms.stream()
+                .map(Film::getId)
+                .collect(Collectors.toList());
+        Map<Integer, List<Genre>> filmsGenres = genreService.getAllFilmsGenres(filmIds);
         for (Film film : allFilms) {
-            List<Genre> filmGenres = genreService.getFilmGenres(film.getId());
-            film.setGenres(filmGenres);
+            film.setGenres(filmsGenres.getOrDefault(film.getId(), Collections.emptyList()));
         }
         return allFilms;
     }

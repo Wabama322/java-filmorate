@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 public class GenreDbStorage implements GenreDao {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
     private static final String SQL_QUERY_DIR = "src/main/resources/genre/";
     private static final String SELECT_ALL_SQL_QUERY = Reader.readString(SQL_QUERY_DIR + "selectAll.sql");
@@ -36,15 +39,21 @@ public class GenreDbStorage implements GenreDao {
     }
 
     @Override
-    public List<Map<Integer, Genre>> getAllFilmsGenres() {
-        return jdbcTemplate.query(SELECT_GENRES_ALL_FILMS_SQL_QUERY,
-                (rs, rowNum) -> {
-                    Map<Integer, Genre> result = new HashMap<>();
-                    result.put(rs.getInt("film_id"),
-                            new Genre(rs.getInt("genre_id"),
-                                    rs.getString("genre_name")));
-                    return result;
-                });
+    public Map<Integer, List<Genre>> getAllFilmsGenres(List<Integer> filmIds) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("filmIds", filmIds);
+        return namedParameterJdbcTemplate.query(SELECT_GENRES_ALL_FILMS_SQL_QUERY, parameters, rs -> {
+            Map<Integer, List<Genre>> result = new HashMap<>();
+            while (rs.next()) {
+                int filmId = rs.getInt("film_id");
+                Genre genre = new Genre(
+                        rs.getInt("genre_id"),
+                        rs.getString("genre_name")
+                );
+                result.computeIfAbsent(filmId, k -> new ArrayList<>()).add(genre);
+            }
+            return result;
+        });
     }
 
     @Override

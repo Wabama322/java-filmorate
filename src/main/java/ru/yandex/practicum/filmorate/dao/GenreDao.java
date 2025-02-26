@@ -8,7 +8,7 @@ import java.util.Map;
 public interface GenreDao {
     List<Genre> getFilmGenres(Integer filmId);
 
-    abstract List<Map<Integer, Genre>> getAllFilmsGenres();
+    Map<Integer, List<Genre>> getAllFilmsGenres(List<Integer> filmIds);
 
     void setGenres(Integer filmId, Integer genreId);
 
